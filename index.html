@@ -384,10 +384,11 @@ function getCurrentData($scope) {
 
 
 function updatePermaLink($scope) {
-	var data = getCurrentData($scope);
-	data.push(["title", $scope.title, ""]);
+	var data = getCurrentData($scope).filter(dat => dat[1] !== undefined && !isNaN(dat[1]));
+	if ($scope.title !== undefined && $scope.title !== "")
+		data.push(["title", $scope.title, ""]);
 	
-	var dataUrl = data.filter(dat => dat[1] !== undefined && !isNaN(dat[1])).map(dat => dat[0] + "=" + dat[1]).join("&");
+	var dataUrl = data.map(dat => dat[0] + "=" + dat[1]).join("&");
 	
 	console.log(dataUrl);
 	window.location.hash = '#' + dataUrl;
