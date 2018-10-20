@@ -1,0 +1,538 @@
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>Link Budget v2.4</title>
+
+<meta name="copyright" content="ADSEE-II Group 29, 2018">
+
+<!-- Math stuff -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+  var TEX = MathJax.InputJax.TeX,
+    MML = MathJax.ElementJax.mml;
+  TEX.Definitions.macros.tooltip = "myToolTip";
+  TEX.Parse.Augment({
+    myToolTip: function (name) {
+      var arg = this.ParseArg(name), tip = this.ParseArg(name);
+      this.Push(MML.maction(arg,tip).With({actiontype: MML.ACTIONTYPE.TOOLTIP}));
+    }
+  });
+});  
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  menuSettings: {inTabOrder: false},
+  TeX: {
+ 	 Macros: { 
+    	tooltipc: ["\\tooltip{\\color{green}{#1}}{#2}",2],
+    	texttip: ["\\tooltip{#1}{\\text{#2}}",2],
+	    texttipc: ["\\tooltip{\\color{green}{#1}}{\\text{#2}}",2]
+    }
+  }
+});
+
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+<!-- Flex-boxes -->
+<style>
+
+input[type=text] {
+	width: 100px;
+	outline: 0;
+	border: none;
+	border-bottom: 2px solid #eee;
+	transition: all 0.25s;
+}
+
+input[type=text]:focus {
+	border-bottom: 2px solid #b7e0fd;
+	background-color: #f7f7f7;
+}
+
+input[readonly] {
+	background-color: #f7f7f7;
+}
+
+div {
+	text-align: right;
+}
+
+div:only-child:not(.box) {
+	padding: 0.3em;
+}
+
+.box > div:nth-child(2) {
+	position: relative;
+	padding-left: 10px;
+	margin-left: 4px;
+}
+
+.box > div:nth-child(2)::before {
+	content: "";
+	position: absolute;
+	width: 50px;
+	height: 100%;
+	box-sizing: border-box;
+	border-top-right-radius: 20% 30px;
+	border-bottom-right-radius: 20% 30px;
+	border-right: 3px solid #000;
+/* 
+ 	border-top: 0.3px solid transparent;
+ 	border-bottom: 0.3px solid transparent;
+ */
+ 	margin-left: -50px;
+ 	top: 0px;
+ 	left: 0px;
+ 	z-index: -10;
+}
+
+.box > div:nth-child(2)::after {
+	content: "";
+	position: absolute;
+	top: calc(50% - 10px);
+	height: 20px;
+	width: 13px;
+	transform: scale(1);
+	left: -3px;
+	
+	background: url("data:image/svg+xml;utf8,<svg width='13' height='20' xmlns='http://www.w3.org/2000/svg'><g><rect fill='#fff' height='22' width='15' y='-1' x='-1'/><ellipse fill-opacity='0' ry='10' rx='10' id='svg_1' cy='0' cx='11.5' stroke-width='3' stroke='#000' fill='#0fffff'/><ellipse fill-opacity='0' ry='10' rx='10' id='svg_2' cy='20' cx='11.5' stroke-width='3' stroke='#000' fill='#0fffff'/></g></svg>")  no-repeat;
+}
+
+.box {
+	display: flex;
+	justify-content: flex-end;
+	flex-align: center;
+}
+
+#l_pr .mjx-chtml.MathJax_CHTML {
+	margin-bottom: 15px;
+}
+
+.unit {
+	display: block;
+	width: 39px;
+	float: right;
+	text-align: center;
+}
+
+.center {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#dbOutput {
+	border-top: 1px solid;
+	width = 100%;
+	margin-top: 5px;
+}
+
+#title {
+	position: relative;
+	margin-right: calc(50% - 350px/2);
+	margin-left: calc(50% - 350px/2);
+	height: 30px;
+	width: 350px;
+	
+	font-size: 20px;
+	text-align: center;
+	
+	border-radius: 0;
+	border: none;
+}
+
+div[ng-app="linkBudget"] {
+	margin-right: auto;
+	margin-left: auto;
+	width: max-content;
+}
+
+</style>
+</head>
+<body>
+
+<div ng-app="linkBudget" ng-controller="linkBudgetController">
+
+<input type="text" id="title" ng-model="title">
+
+<div class="box">
+<div>
+	
+	<div class="box">
+		<div>
+			<div>
+			<div><div>
+				$\tooltip{P}{\text{Transmitter power}}$ = <input type="text" ng-model="P"> <span class="unit">W</span>
+				</div></div>
+				<div><div>
+					$\tooltip{L_l}{\text{Transmitter to antenna loss factor}}$ = <input type="text" ng-model="L_l"> <span class="unit">-</span>
+				</div></div>
+				<div>
+				<div class="box">
+					<div>
+						<div><div>
+							$\tooltip{\eta_t}{\text{Transmitting antenna efficiency}}$ = <input type="text" ng-model="eta_t"> <span class="unit">-</span>
+						</div></div>
+						
+						<div><div>
+							$\tooltip{D_t}{\text{Diameter transmitting antenna}}$ = <input type="text" ng-model="D_t"> <span class="unit">m</span>
+						</div></div>
+						
+						<div><div>
+						$\tooltip{f}{\text{Frequency}}$ = <input type="text" ng-model="f"> <span class="unit">Hz</span>
+						</div></div>
+						
+						<div><div>
+							$\tooltip{c}{\text{Speed of light}}$ = <input type="text" value="{{ c }}" readonly> <span class="unit">m/s</span>
+						</div></div>
+					</div>
+					<div>
+						<div class="center">
+							$\tooltip{G_t}{\text{Transmitting antenna gain}} = \eta_t \cdot \left( \frac{\pi \cdot D_t \cdot f}{c} \right)^2$ = <input type="text" value="{{ G_t = eta_t * Math.pow(Math.PI * D_t * f / c, 2) | precision:3 }}" readonly> <span class="unit" style="margin-top: 5px">-</span>
+						</div>
+					</div>
+				</div>
+				</div>
+			</div>
+			<div style="text-align: right"><div>
+				$\tooltip{L_a}{\text{Transmission path losses}}$ = <input type="text" ng-model="L_a"> <span class="unit">-</span>
+			</div></div>
+			<div class="box">
+				<div>
+					<div><div>
+						$\tooltip{\eta_r}{\text{Receiving antenna efficiency}}$ = <input type="text" ng-model="eta"> <span class="unit">-</span>
+					</div></div>
+					<div><div>
+						$\tooltip{D_r}{\text{Diameter receiving antenna}}$ = <input type="text" ng-model="D_r"> <span class="unit">m</span>
+					</div></div>
+					<div><div>
+						$\tooltip{S}{\text{Distance between transmitter and receiver}}$ = <input type="text" ng-model="S"> <span class="unit">m</span>
+					</div></div>
+				</div>
+				<div>
+					<div><div>
+						$\tooltip{G_r}{\text{Receiving antenna gain}} = \eta_r \cdot \left( \frac{\pi \cdot D_r \cdot f}{c} \right)^2$ = <input type="text" value="{{ G_r = eta * Math.pow(Math.PI * D_r * f / c, 2) | precision:3 }}" readonly> <span class="unit" style="margin-top: 5px">-</span>
+					</div></div>
+					<div><div>
+						$\tooltip{L_s}{\text{Space loss}} = \left( \frac{c}{4 \cdot \pi \cdot S \cdot f} \right)^2$ = <input type="text" value="{{ L_s = Math.pow(c / (4 * Math.PI * S * f), 2) | precision:3 }}" readonly> <span class="unit" style="margin-top: 5px">-</span>
+					</div></div>
+				</div>
+
+			</div>
+
+			<div><div>
+				$\tooltip{L_r}{\text{Reception feeder loss}}$ = <input type="text" ng-model="L_r"> <span class="unit">-</span>
+			</div></div>
+			
+			<div>			
+				<div class="box">
+					<div>
+						<div><div>
+							$\tooltip{e_t}{\text{Pointing offset angle}}$ = <input type="text" ng-model="e_t"> <span class="unit">deg</span>
+						</div></div>
+						<div><div>
+							$\tooltip{\alpha_{1/2}}{\text{Antenna half-power beamwidth}}$ = <input type="text" ng-model="alpha_halfpower"> <span class="unit">deg</span>
+						</div></div>
+					</div>
+					<div><div id="l_pr" class="center">
+						$\tooltip{L_{pr}}{\text{Antenna pointing loss}} = 10^{-1.2 \left( \frac{e_t}{\alpha_{1/2}} \right)^2}$ = <span style="display: inline-block"><input type="text" value="{{ L_pr = (Math.pow(10, -1.2 * Math.pow(e_t/alpha_halfpower, 2))) | precision:3 }}" readonly> <span class="unit">-</span></span>
+					</div></div>
+				</div>
+			</div>
+
+
+			<div>
+				<div class="box">
+					<div>
+						<div><div>
+							Orbited body: <select ng-options="option.body for option in data.availableOptions track by option.body" ng-model="data.selectedOption"></select>
+						</div></div>
+						<div><div>
+							$\tooltip{\mu}{\text{Gravitational parameter}}$ = <input type="text" value="{{ (mu = data.selectedOption.mu) | precision:3 }}" readonly> <span class="unit">$m^3/s^2$</span>
+						</div></div>
+						
+						<div><div>
+							$\tooltip{r}{\text{Radius orbited body}}$ = <input type="text" value="{{ (r = data.selectedOption.radius * 1e3) | precision:3 }}" readonly> <span class="unit">m</span>
+						</div></div>
+						
+						<div><div>
+							$\tooltip{h}{\text{Orbit altitude}}$ = <input type="text" ng-model="h"> <span class="unit">m</span>
+						</div></div>
+						
+						<div><div>
+							$\tooltip{\phi_{swath}}{\text{Swath angle}}$ = <input type="text" ng-model="phi_swath"> <span class="unit">°</span>
+						</div></div>
+						
+						<div><div>
+							$\tooltip{\alpha_{pixel}}{\text{Pixel size}}$ = <input type="text" ng-model="alpha_pixel"> <span class="unit">arcmin</span>
+						</div></div>
+						
+						<div><div>
+							$\tooltip{data_{pixel}}{\text{Data per pixel}}$ = <input type="text" ng-model="data_pixel"> <span class="unit">bit/px</span>
+						</div></div>
+						
+						<div><div>
+							$\tooltip{t_{operational}}{\text{Fraction of day operational}}$ = <input type="text" ng-model="t_op"> <span class="unit">day$^{-1}$</span>
+						</div></div>
+						
+						<div><div>
+							$\tooltip{t_{transmission}}{\text{Transmission time}}$ = <input type="text" ng-model="t_trans"> <span class="unit">h/day</span>
+						</div></div>
+					</div>
+					<div>
+						<div class="center">
+							<input type="hidden" value="{{ (R_calc = Math.sqrt(mu/(r + h)) * 1 / (2 * h * Math.tan(phi_swath/2 * Math.PI/180)) * Math.pow(phi_swath/(alpha_pixel * 1/60), 2) * data_pixel * t_op * 24/t_trans ) }}">
+							$\tooltip{R}{\text{Calculated bit rate}} = \sqrt{\frac{\mu}{a}} \cdot \frac{1}{2 \cdot h \cdot \tan \left( \frac{\phi}{2} \right)} \cdot \left( \frac{\phi}{\alpha} \right)^2 \cdot data_{pixel} \cdot \frac{t_{operational}}{t_{transmission}}$<br />= <input type="text" value="{{ (R = (R_input !== undefined && !isNaN(R_input) && R_input !== '' ? R_input : R_calc)) | precision:3 }}" readonly> <span class="unit">bit/s</span>
+						</div>
+						<div><div>
+							$\tooltip{R_{\mbox{direct input}}}{\text{Direct input bit rate}}$ = <input type="text" ng-model="R_input"> <span class="unit">bit/s</p></span>
+						</div></div>
+					</div>
+				</div>
+				</div>
+		</div>
+		<div><div class="center" style="margin-top: 20px">
+			<p>$\tooltip{C}{\text{Received power}} = P \cdot L_l \cdot G_t \cdot L_a \cdot G_r \cdot L_s \cdot L_{pr} \cdot L_r$ = <input type="text" value="{{ C = (P * L_l * G_t * L_a * G_r * L_s * L_pr * L_r) | precision:3 }}" readonly> <span class="unit">J</p></span>
+			<p>$\tooltip{E_b}{\text{Received power per bit}} = \frac{C}{R}$ = <input type="text" value="{{ E_b = (C/R) | precision:3 }}" readonly> <span class="unit">J/bit</p></span>
+		</div></div>
+	</div>
+	
+	<div class="box">
+		<div>
+			<div><div>
+				$\tooltip{k}{\text{Boltzmann's constant}}$ = <input type="text" value="{{ k | precision:3}}" readonly> <span class="unit">J/K</span>
+			</div></div>
+			<div><div>
+				$\tooltip{T_s}{\text{System noise temperature}}$ = <input type="text" ng-model="T_s"> <span class="unit">K</span>
+			</div></div>
+		</div>
+		<div><div class="center">
+			$\tooltip{N_0}{\text{White noise spectral density}} = k \cdot T_s$ = <input type="text" value="{{ N_0 = (k * T_s) | precision:3 }}" readonly> <span class="unit">W/Hz</span>
+		</div></div>
+	</div>
+</div>
+<div><div class="center" style="margin-top: 20px; padding-right: 35px">
+	<p>$\tooltip{SNR}{Signal to noise ratio} = \frac{E_b}{N_0}$ = <input type="text" value="{{ SNR = (E_b/N_0) | precision:3 }}" readonly> <span class="unit">W/Hz</span></p><p>= <input type="text" value="{{ (dec(P) + dec(L_l) + dec(G_t) + dec(L_a) + dec(G_r) + dec(L_s) + dec(L_pr) + dec(L_r) - dec(k) - dec(R) - dec(T_s)) | precision:3 }}" readonly> <span class="unit">dB(W/Hz)</span></p>
+</div></div>
+
+</div>
+<input type="button" onclick="setPermaLink()" value="Save values in url">
+<input type="button" onclick="downloadCsv()" value="Download data as CSV">
+</div>
+
+<script>
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
+
+var downloadCsv = function() {};
+var setPermaLink = function() {};
+
+function getCurrentData($scope) {
+	return [
+		["P", 				$scope.P,		 		"W"],
+		["L_l", 			$scope.L_l,			 	"-"],
+		
+		["eta_t", 			$scope.eta_t,	 		"-"],
+		["D_t", 			$scope.D_t,		 		"m"],
+		["f", 		 		$scope.f,		 		"Hz"],
+		["c", 		 		$scope.c, 				"m/s"],
+		
+		["G_t", 			$scope.G_t,		 		"-"],
+		
+		["L_a", 			$scope.L_a, 			"-"],
+		
+		["eta", 			$scope.eta,		 		"-"],
+		["D_r", 			$scope.D_r,		 		"m"],
+		["S",				$scope.S, 				"m"],
+		
+		["G_r", 			$scope.G_r,		 		"-"],
+		["L_s", 			$scope.L_s, 			"-"],
+				
+		["e_t", 		 	$scope.e_t, 			"deg"],
+		["L_pr", 			$scope.L_pr,		 	"W"],
+		["alpha_halfpower",	$scope.alpha_halfpower,	"deg"],
+
+		["L_r", 			$scope.L_r,		 		"-"],
+		["body",			$scope.data.availableOptions.map(function(e) { return e.body; }).indexOf($scope.data.selectedOption.body), "-"],
+		["h",				$scope.h,				"m"],
+		["phi_swath",		$scope.phi_swath, 		"deg"],
+		["alpha_pixel",		$scope.alpha_pixel,		"arcmin"],
+		["data_pixel",		$scope.data_pixel,		"bit/px"],
+		["t_op",			$scope.t_op,			"-"],
+		["t_trans",			$scope.t_trans,			"min"],
+		
+		
+		["R", 				$scope.R, 				"bit/s"],
+		["R_input",			$scope.R_input,			"bit/s"],
+
+		["k", 				$scope.k, 				"J/K"],
+		["T_s", 			$scope.T_s, 			"K"],
+		
+		["C", 				$scope.C, 				"J"],
+		["E_b", 			$scope.E_b, 			"J/bit"],
+		["N_0", 			$scope.N_0, 			"W/Hz"],
+		
+		["SNR", 			$scope.SNR, 			"W/Hz"],
+		
+	];
+}
+
+
+
+function updatePermaLink($scope) {
+	var data = getCurrentData($scope);
+	data.push(["title", $scope.title, ""]);
+	
+	var dataUrl = data.filter(dat => dat[1] !== undefined && !isNaN(dat[1])).map(dat => dat[0] + "=" + dat[1]).join("&");
+	
+	console.log(dataUrl);
+	window.location.hash = '#' + dataUrl;
+}
+
+
+function downloadData($scope) {
+	function generateDbUnit(unit) {
+		if (unit == "-") unit = "";
+		
+		if (unit.indexOf("/") !== -1) {
+			return "dB(" + unit + ")";
+		} else {
+			return "dB" + unit;
+		}
+	}
+	
+	console.log("hallo");
+
+	const downloadOptions = ["P", "L_l", "G_t", "L_a", "G_r", "L_s", "L_pr", "L_r", "R", "k", "T_s", "SNR"];
+
+	console.log(downloadOptions);
+	
+	console.log("current data");
+
+	console.log(getCurrentData($scope));
+	console.log("filtered");
+	
+	var data = getCurrentData($scope).filter(element => downloadOptions.indexOf(element[0]) !== -1);
+
+	console.log(data);
+
+	var rows = [["Variable", "Value", "Unit", "Value in DB", "dB Unit"]];
+	data.forEach(function(row) {
+		var row = row;
+		row.push($scope.dec(row[1]));
+		row.push(generateDbUnit(row[2]));
+		rows.push(row);
+	});
+	
+	console.log(rows);
+	
+	let csvContent = "data:text/csv;charset=utf-8,";
+	rows.forEach(function(rowArray){
+	   let row = rowArray.join(",");
+	   csvContent += row + "\r\n";
+	}); 
+	
+	if ($scope.title === undefined) {
+		$scope.title = "your mission";
+	}
+	
+	var encodedUri = encodeURI(csvContent);
+	var link = document.createElement("a");
+	link.setAttribute("style", "display: none");
+	link.setAttribute("href", encodedUri);
+	link.setAttribute("download", "link_data_" + $scope.title.replaceAll(" ", "_") + ".csv");
+	document.body.appendChild(link); // Required for FF
+	
+	link.click(); // This will download the data file named "my_data.csv".
+}
+
+var app = angular.module('linkBudget', []);
+app.controller('linkBudgetController', function($scope) {	
+	var hash = window.location.hash.substr(1);
+	
+	$scope.isNaN = isNaN;
+	
+	$scope.data = {
+    	availableOptions: [
+//     		{ body: 'Body', mu: 'μ (m3 s−2)', radius: 'Radius [km]' },
+			{ body: 'Sun',		mu: 1.32712440018e20,	radius: 696342 },
+			{ body: 'Mercury',	mu: 2.2032e13, 			radius: 2439.7 },
+			{ body: 'Venus',	mu: 3.24859e14,			radius: 6051.8 },
+			{ body: 'Earth',	mu: 3.986004418e14,		radius: 6371.0 },
+			{ body: 'Moon',		mu: 4.9048695e12,		radius: 1737.1 },
+			{ body: 'Mars',		mu: 4.282837e13,		radius: 3389.5 },
+			{ body: 'Ceres',	mu: 6.26325e10,			radius: 473 },
+			{ body: 'Jupiter',	mu: 1.26686534e17,		radius: 69911 },
+			{ body: 'Saturn',	mu: 3.7931187e16,		radius: 58232 },
+			{ body: 'Uranus',	mu: 5.793939e15,		radius: 25362 },
+			{ body: 'Neptune',	mu: 6.836529e15,		radius: 24622 },
+			{ body: 'Pluto',	mu: 8.71e11,			radius: 1186 },
+			{ body: 'Eris',		mu: 1.108e12,			radius: 1163 }
+    	]
+    };
+    
+    $scope.data.selectedOption = $scope.data.availableOptions[3];
+
+	var result = hash.split('&').forEach(function (item) {
+	    var parts = item.split('=');
+	    console.log(parts[0] + " = " + parts[1]);
+	    if (parts[0] === "body") {
+	    	$scope.data.selectedOption = $scope.data.availableOptions[parseInt(parts[1])];
+	    } else {
+			$scope[parts[0]] = parts[0] !== "title" ? parseFloat(parts[1]) : decodeURI(parts[1]);
+		}
+	}, {});
+	
+	console.log($scope);
+	
+	downloadCsv = function() { downloadData($scope); };
+	setPermaLink = function() { updatePermaLink($scope); };
+	
+	// Setting scope values
+	$scope.Math = window.Math;
+	$scope.dec	= function(number) { return 10 * Math.log10(number); }
+
+	// Constants
+	$scope.k	= 1.38064852 * Math.pow(10,-23);
+	$scope.c	= 299792458;
+	
+});
+app.filter('precision', function() {
+  return function(number, precision) {
+  	console.log(number);
+  	number = Number(number);
+  	console.log(number);
+  	console.log("A");
+  	if (isNaN(number) || !isFinite(number)) {
+  		return "Not enough data";
+  	} else {
+  		return number.toPrecision(precision);
+  	}
+  }
+});
+
+app.filter('decibel', function() {
+  return function(number) {
+  	return 10 * Math.log10(number);
+  }
+});
+
+
+var dbOutput = document.getElementById("dbOutput");
+
+var inputs = document.getElementsByTagName("input");
+
+for (var i = 0, max = inputs.length; i < max; i++) {
+	var input = inputs[i];
+    if (input.hasAttribute('readonly')) {
+    	input.tabIndex = -1;
+    }
+ 
+}
+</script>
+</body>
+</html>
