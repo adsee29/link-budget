@@ -2,7 +2,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Link Budget v2.4</title>
+<title>Link Budget v2.4.5</title>
 
 <meta name="copyright" content="ADSEE-II Group 29, 2018">
 
@@ -38,7 +38,7 @@ MathJax.Hub.Config({
 <!-- Flex-boxes -->
 <style>
 
-input[type=text] {
+input[type=number] {
 	width: 100px;
 	outline: 0;
 	border: none;
@@ -149,6 +149,17 @@ div[ng-app="linkBudget"] {
 	width: max-content;
 }
 
+/* For Firefox */
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+/* Webkit browsers like Safari and Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 </style>
 </head>
 <body>
@@ -164,80 +175,80 @@ div[ng-app="linkBudget"] {
 		<div>
 			<div>
 			<div><div>
-				$\tooltip{P}{\text{Transmitter power}}$ = <input type="text" ng-model="P"> <span class="unit">W</span>
+				$\tooltip{P}{\text{Transmitter power}}$ = <input type="number" ng-model="P"> <span class="unit">W</span>
 				</div></div>
 				<div><div>
-					$\tooltip{L_l}{\text{Transmitter to antenna loss factor}}$ = <input type="text" ng-model="L_l"> <span class="unit">-</span>
+					$\tooltip{L_l}{\text{Transmitter to antenna loss factor}}$ = <input type="number" ng-model="L_l"> <span class="unit">-</span>
 				</div></div>
 				<div>
 				<div class="box">
 					<div>
 						<div><div>
-							$\tooltip{\eta_t}{\text{Transmitting antenna efficiency}}$ = <input type="text" ng-model="eta_t"> <span class="unit">-</span>
+							$\tooltip{\eta_t}{\text{Transmitting antenna efficiency}}$ = <input type="number" ng-model="eta_t"> <span class="unit">-</span>
 						</div></div>
 						
 						<div><div>
-							$\tooltip{D_t}{\text{Diameter transmitting antenna}}$ = <input type="text" ng-model="D_t"> <span class="unit">m</span>
+							$\tooltip{D_t}{\text{Diameter transmitting antenna}}$ = <input type="number" ng-model="D_t"> <span class="unit">m</span>
 						</div></div>
 						
 						<div><div>
-						$\tooltip{f}{\text{Frequency}}$ = <input type="text" ng-model="f"> <span class="unit">Hz</span>
+						$\tooltip{f}{\text{Frequency}}$ = <input type="number" ng-model="f"> <span class="unit">Hz</span>
 						</div></div>
 						
 						<div><div>
-							$\tooltip{c}{\text{Speed of light}}$ = <input type="text" value="{{ c }}" readonly> <span class="unit">m/s</span>
+							$\tooltip{c}{\text{Speed of light}}$ = <input type="number" value="{{ c }}" readonly> <span class="unit">m/s</span>
 						</div></div>
 					</div>
 					<div>
 						<div class="center">
-							$\tooltip{G_t}{\text{Transmitting antenna gain}} = \eta_t \cdot \left( \frac{\pi \cdot D_t \cdot f}{c} \right)^2$ = <input type="text" value="{{ G_t = eta_t * Math.pow(Math.PI * D_t * f / c, 2) | precision:3 }}" readonly> <span class="unit" style="margin-top: 5px">-</span>
+							$\tooltip{G_t}{\text{Transmitting antenna gain}} = \eta_t \cdot \left( \frac{\pi \cdot D_t \cdot f}{c} \right)^2$ = <input type="number" value="{{ G_t = eta_t * Math.pow(Math.PI * D_t * f / c, 2) | precision:3 }}" readonly> <span class="unit" style="margin-top: 5px">-</span>
 						</div>
 					</div>
 				</div>
 				</div>
 			</div>
 			<div style="text-align: right"><div>
-				$\tooltip{L_a}{\text{Transmission path losses}}$ = <input type="text" ng-model="L_a"> <span class="unit">-</span>
+				$\tooltip{L_a}{\text{Transmission path losses}}$ = <input type="number" ng-model="L_a"> <span class="unit">-</span>
 			</div></div>
 			<div class="box">
 				<div>
 					<div><div>
-						$\tooltip{\eta_r}{\text{Receiving antenna efficiency}}$ = <input type="text" ng-model="eta"> <span class="unit">-</span>
+						$\tooltip{\eta_r}{\text{Receiving antenna efficiency}}$ = <input type="number" ng-model="eta"> <span class="unit">-</span>
 					</div></div>
 					<div><div>
-						$\tooltip{D_r}{\text{Diameter receiving antenna}}$ = <input type="text" ng-model="D_r"> <span class="unit">m</span>
+						$\tooltip{D_r}{\text{Diameter receiving antenna}}$ = <input type="number" ng-model="D_r"> <span class="unit">m</span>
 					</div></div>
 					<div><div>
-						$\tooltip{S}{\text{Distance between transmitter and receiver}}$ = <input type="text" ng-model="S"> <span class="unit">m</span>
+						$\tooltip{S}{\text{Distance between transmitter and receiver}}$ = <input type="number" ng-model="S"> <span class="unit">m</span>
 					</div></div>
 				</div>
 				<div>
 					<div><div>
-						$\tooltip{G_r}{\text{Receiving antenna gain}} = \eta_r \cdot \left( \frac{\pi \cdot D_r \cdot f}{c} \right)^2$ = <input type="text" value="{{ G_r = eta * Math.pow(Math.PI * D_r * f / c, 2) | precision:3 }}" readonly> <span class="unit" style="margin-top: 5px">-</span>
+						$\tooltip{G_r}{\text{Receiving antenna gain}} = \eta_r \cdot \left( \frac{\pi \cdot D_r \cdot f}{c} \right)^2$ = <input type="number" value="{{ G_r = eta * Math.pow(Math.PI * D_r * f / c, 2) | precision:3 }}" readonly> <span class="unit" style="margin-top: 5px">-</span>
 					</div></div>
 					<div><div>
-						$\tooltip{L_s}{\text{Space loss}} = \left( \frac{c}{4 \cdot \pi \cdot S \cdot f} \right)^2$ = <input type="text" value="{{ L_s = Math.pow(c / (4 * Math.PI * S * f), 2) | precision:3 }}" readonly> <span class="unit" style="margin-top: 5px">-</span>
+						$\tooltip{L_s}{\text{Space loss}} = \left( \frac{c}{4 \cdot \pi \cdot S \cdot f} \right)^2$ = <input type="number" value="{{ L_s = Math.pow(c / (4 * Math.PI * S * f), 2) | precision:3 }}" readonly> <span class="unit" style="margin-top: 5px">-</span>
 					</div></div>
 				</div>
 
 			</div>
 
 			<div><div>
-				$\tooltip{L_r}{\text{Reception feeder loss}}$ = <input type="text" ng-model="L_r"> <span class="unit">-</span>
+				$\tooltip{L_r}{\text{Reception feeder loss}}$ = <input type="number" ng-model="L_r"> <span class="unit">-</span>
 			</div></div>
 			
 			<div>			
 				<div class="box">
 					<div>
 						<div><div>
-							$\tooltip{e_t}{\text{Pointing offset angle}}$ = <input type="text" ng-model="e_t"> <span class="unit">deg</span>
+							$\tooltip{e_t}{\text{Pointing offset angle}}$ = <input type="number" ng-model="e_t"> <span class="unit">deg</span>
 						</div></div>
 						<div><div>
-							$\tooltip{\alpha_{1/2}}{\text{Antenna half-power beamwidth}}$ = <input type="text" ng-model="alpha_halfpower"> <span class="unit">deg</span>
+							$\tooltip{\alpha_{1/2}}{\text{Antenna half-power beamwidth}}$ = <input type="number" ng-model="alpha_halfpower"> <span class="unit">deg</span>
 						</div></div>
 					</div>
 					<div><div id="l_pr" class="center">
-						$\tooltip{L_{pr}}{\text{Antenna pointing loss}} = 10^{-1.2 \left( \frac{e_t}{\alpha_{1/2}} \right)^2}$ = <span style="display: inline-block"><input type="text" value="{{ L_pr = (Math.pow(10, -1.2 * Math.pow(e_t/alpha_halfpower, 2))) | precision:3 }}" readonly> <span class="unit">-</span></span>
+						$\tooltip{L_{pr}}{\text{Antenna pointing loss}} = 10^{-1.2 \left( \frac{e_t}{\alpha_{1/2}} \right)^2}$ = <span style="display: inline-block"><input type="number" value="{{ L_pr = (Math.pow(10, -1.2 * Math.pow(e_t/alpha_halfpower, 2))) | precision:3 }}" readonly> <span class="unit">-</span></span>
 					</div></div>
 				</div>
 			</div>
@@ -250,71 +261,89 @@ div[ng-app="linkBudget"] {
 							Orbited body: <select ng-options="option.body for option in data.availableOptions track by option.body" ng-model="data.selectedOption"></select>
 						</div></div>
 						<div><div>
-							$\tooltip{\mu}{\text{Gravitational parameter}}$ = <input type="text" value="{{ (mu = data.selectedOption.mu) | precision:3 }}" readonly> <span class="unit">$m^3/s^2$</span>
+							$\tooltip{\mu}{\text{Gravitational parameter}}$ = <input type="number" value="{{ (mu = data.selectedOption.mu) | precision:3 }}" readonly> <span class="unit">$m^3/s^2$</span>
 						</div></div>
 						
 						<div><div>
-							$\tooltip{r}{\text{Radius orbited body}}$ = <input type="text" value="{{ (r = data.selectedOption.radius * 1e3) | precision:3 }}" readonly> <span class="unit">m</span>
+							$\tooltip{r}{\text{Radius orbited body}}$ = <input type="number" value="{{ (r = data.selectedOption.radius * 1e3) | precision:3 }}" readonly> <span class="unit">m</span>
 						</div></div>
 						
 						<div><div>
-							$\tooltip{h}{\text{Orbit altitude}}$ = <input type="text" ng-model="h"> <span class="unit">m</span>
+							$\tooltip{h}{\text{Orbit altitude}}$ = <input type="number" ng-model="h"> <span class="unit">m</span>
 						</div></div>
 						
 						<div><div>
-							$\tooltip{\phi_{swath}}{\text{Swath angle}}$ = <input type="text" ng-model="phi_swath"> <span class="unit">°</span>
+							$\tooltip{\phi_{swath}}{\text{Swath angle}}$ = <input type="number" ng-model="phi_swath"> <span class="unit">°</span>
 						</div></div>
 						
 						<div><div>
-							$\tooltip{\alpha_{pixel}}{\text{Pixel size}}$ = <input type="text" ng-model="alpha_pixel"> <span class="unit">arcmin</span>
+							$\tooltip{\alpha_{pixel}}{\text{Pixel size}}$ = <input type="number" ng-model="alpha_pixel"> <span class="unit">arcmin</span>
 						</div></div>
 						
 						<div><div>
-							$\tooltip{data_{pixel}}{\text{Data per pixel}}$ = <input type="text" ng-model="data_pixel"> <span class="unit">bit/px</span>
+							$\tooltip{data_{pixel}}{\text{Data per pixel}}$ = <input type="number" ng-model="data_pixel"> <span class="unit">bit/px</span>
 						</div></div>
 						
 						<div><div>
-							$\tooltip{t_{operational}}{\text{Fraction of day operational}}$ = <input type="text" ng-model="t_op"> <span class="unit">day$^{-1}$</span>
+							$\tooltip{t_{operational}}{\text{Fraction of day operational}}$ = <input type="number" ng-model="t_op"> <span class="unit">day$^{-1}$</span>
 						</div></div>
 						
 						<div><div>
-							$\tooltip{t_{transmission}}{\text{Transmission time}}$ = <input type="text" ng-model="t_trans"> <span class="unit">h/day</span>
+							$\tooltip{t_{transmission}}{\text{Transmission time}}$ = <input type="number" ng-model="t_trans"> <span class="unit">h/day</span>
 						</div></div>
 					</div>
 					<div>
+					<!--
+						<div><div>
+							$n_{pixel} = $ <input type="number" value="{{ phi_swath/(alpha_pixel * 1/60) }}">
+						</div></div>
+						<div><div>
+							$S_{LOS} = $ <input type="number" value="{{ 2 * h * Math.tan(phi_swath/2 * Math.PI/180) }}">
+						</div></div>
+						<div><div>
+							$\dot{n}_{lines} = $ <input type="number" value="{{ Math.sqrt(mu/(r + h)) * 1 / (2 * h * Math.tan(phi_swath/2 * Math.PI/180)) * phi_swath/(alpha_pixel * 1/60) }}">
+						</div></div>
+						<div><div>
+							$v = $ <input type="number" value="{{ Math.sqrt(mu/(r + h)) }}">
+						</div></div>
+						
+						<div><div>
+							$\dot{n}_{pixel} = $ <input type="number" value="{{ Math.sqrt(mu/(r + h)) * 1 / (2 * h * Math.tan(phi_swath/2 * Math.PI/180)) * Math.pow(phi_swath/(alpha_pixel * 1/60), 2) }}">
+						</div></div>
+					-->
 						<div class="center">
 							<input type="hidden" value="{{ (R_calc = Math.sqrt(mu/(r + h)) * 1 / (2 * h * Math.tan(phi_swath/2 * Math.PI/180)) * Math.pow(phi_swath/(alpha_pixel * 1/60), 2) * data_pixel * t_op * 24/t_trans ) }}">
-							$\tooltip{R}{\text{Calculated bit rate}} = \sqrt{\frac{\mu}{a}} \cdot \frac{1}{2 \cdot h \cdot \tan \left( \frac{\phi}{2} \right)} \cdot \left( \frac{\phi}{\alpha} \right)^2 \cdot data_{pixel} \cdot \frac{t_{operational}}{t_{transmission}}$<br />= <input type="text" value="{{ (R = (R_input !== undefined && !isNaN(R_input) && R_input !== '' ? R_input : R_calc)) | precision:3 }}" readonly> <span class="unit">bit/s</span>
+							$\tooltip{R}{\text{Calculated bit rate}} = \sqrt{\frac{\mu}{a}} \cdot \frac{1}{2 \cdot h \cdot \tan \left( \frac{\phi}{2} \right)} \cdot \left( \frac{\phi}{\alpha} \right)^2 \cdot data_{pixel} \cdot \frac{t_{operational}}{t_{transmission}}$<br />= <input type="number" value="{{ (R = (R_input !== undefined && !isNaN(R_input) && R_input !== '' ? R_input : R_calc)) | precision:3 }}" readonly> <span class="unit">bit/s</span>
 						</div>
 						<div><div>
-							$\tooltip{R_{\mbox{direct input}}}{\text{Direct input bit rate}}$ = <input type="text" ng-model="R_input"> <span class="unit">bit/s</p></span>
+							$\tooltip{R_{\mbox{direct input}}}{\text{Direct input bit rate}}$ = <input type="number" ng-model="R_input"> <span class="unit">bit/s</p></span>
 						</div></div>
 					</div>
 				</div>
 				</div>
 		</div>
 		<div><div class="center" style="margin-top: 20px">
-			<p>$\tooltip{C}{\text{Received power}} = P \cdot L_l \cdot G_t \cdot L_a \cdot G_r \cdot L_s \cdot L_{pr} \cdot L_r$ = <input type="text" value="{{ C = (P * L_l * G_t * L_a * G_r * L_s * L_pr * L_r) | precision:3 }}" readonly> <span class="unit">J</p></span>
-			<p>$\tooltip{E_b}{\text{Received power per bit}} = \frac{C}{R}$ = <input type="text" value="{{ E_b = (C/R) | precision:3 }}" readonly> <span class="unit">J/bit</p></span>
+			<p>$\tooltip{C}{\text{Received power}} = P \cdot L_l \cdot G_t \cdot L_a \cdot G_r \cdot L_s \cdot L_{pr} \cdot L_r$ = <input type="number" value="{{ C = (P * L_l * G_t * L_a * G_r * L_s * L_pr * L_r) | precision:3 }}" readonly> <span class="unit">J</p></span>
+			<p>$\tooltip{E_b}{\text{Received power per bit}} = \frac{C}{R}$ = <input type="number" value="{{ E_b = (C/R) | precision:3 }}" readonly> <span class="unit">J/bit</p></span>
 		</div></div>
 	</div>
 	
 	<div class="box">
 		<div>
 			<div><div>
-				$\tooltip{k}{\text{Boltzmann's constant}}$ = <input type="text" value="{{ k | precision:3}}" readonly> <span class="unit">J/K</span>
+				$\tooltip{k}{\text{Boltzmann's constant}}$ = <input type="number" value="{{ k | precision:3}}" readonly> <span class="unit">J/K</span>
 			</div></div>
 			<div><div>
-				$\tooltip{T_s}{\text{System noise temperature}}$ = <input type="text" ng-model="T_s"> <span class="unit">K</span>
+				$\tooltip{T_s}{\text{System noise temperature}}$ = <input type="number" ng-model="T_s"> <span class="unit">K</span>
 			</div></div>
 		</div>
 		<div><div class="center">
-			$\tooltip{N_0}{\text{White noise spectral density}} = k \cdot T_s$ = <input type="text" value="{{ N_0 = (k * T_s) | precision:3 }}" readonly> <span class="unit">W/Hz</span>
+			$\tooltip{N_0}{\text{White noise spectral density}} = k \cdot T_s$ = <input type="number" value="{{ N_0 = (k * T_s) | precision:3 }}" readonly> <span class="unit">W/Hz</span>
 		</div></div>
 	</div>
 </div>
 <div><div class="center" style="margin-top: 20px; padding-right: 35px">
-	<p>$\tooltip{SNR}{Signal to noise ratio} = \frac{E_b}{N_0}$ = <input type="text" value="{{ SNR = (E_b/N_0) | precision:3 }}" readonly> <span class="unit">W/Hz</span></p><p>= <input type="text" value="{{ (dec(P) + dec(L_l) + dec(G_t) + dec(L_a) + dec(G_r) + dec(L_s) + dec(L_pr) + dec(L_r) - dec(k) - dec(R) - dec(T_s)) | precision:3 }}" readonly> <span class="unit">dB(W/Hz)</span></p>
+	<p>$\tooltip{SNR}{Signal to noise ratio} = \frac{E_b}{N_0}$ = <input type="number" value="{{ SNR = (E_b/N_0) | precision:3 }}" readonly> <span class="unit">W/Hz</span></p><p>= <input type="number" value="{{ (dec(P) + dec(L_l) + dec(G_t) + dec(L_a) + dec(G_r) + dec(L_s) + dec(L_pr) + dec(L_r) - dec(k) - dec(R) - dec(T_s)) | precision:3 }}" readonly> <span class="unit">dB(W/Hz)</span></p>
 </div></div>
 
 </div>
